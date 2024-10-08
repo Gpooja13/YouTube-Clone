@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoVideocamOutline } from "react-icons/io5";
 import Avatar from "react-avatar";
 import { IoSearchOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../utils/appSlice";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(true);
+  const dispatch = useDispatch();
 
   const toggleHandler = () => {
-    setOpen(false);
-    
+    dispatch(toggleSidebar());
   };
   return (
     <div className="flex items-center justify-center fixed w-[100%] top-0 z-10 bg-white">

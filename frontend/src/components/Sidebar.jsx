@@ -2,6 +2,7 @@ import React from "react";
 import { MdHome } from "react-icons/md";
 import { SiYoutubeshorts } from "react-icons/si";
 import { MdSubscriptions } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const sidebarContent = [
@@ -13,19 +14,16 @@ const Sidebar = () => {
     { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
     { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
     { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
-    { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
-    { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
-    { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
-    { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
-    { icons: <MdSubscriptions size={"24px"} />, title: "Subscription" },
   ];
+  const open = useSelector((store) => store.app.open);
+
   return (
-    <div className="border border-gray-200 w-[15%] ml-3 mt-4 h-[calc(100vh-4.625rem)] absolute top-14 overflow-x-hidden overflow-y-auto">
+    <div className={`border border-gray-200 ml-3 mt-4 h-[calc(100vh-4.625rem)] absolute top-14 overflow-x-hidden overflow-y-auto ${open?"w-[15%]":"w-[5%]"}`}>
       {sidebarContent.map((item, index) => {
         return (
-          <div key={index} className="m-5 flex w-[100%]">
+          <div key={index} className="m-5 flex">
             <span>{item.icons}</span>
-            <p className="ml-5">{item.title}</p>
+            <p className={`ml-5 ${!open?"hidden":""}`}>{item.title}</p>
           </div>
         );
       })}
