@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { IoVideocamOutline } from "react-icons/io5";
+import { IoVideocamOutline, IoSearchOutline } from "react-icons/io5";
 import Avatar from "react-avatar";
-import { IoSearchOutline } from "react-icons/io5";
 import { useDispatch } from "react-redux";
-import { toggleSidebar } from "../utils/appSlice";
+import { setCategory, toggleSidebar } from "../utils/appSlice";
+import { API_KEY, SUGGESTION_API } from "../constants/constant";
+import axios from "axios";
 
 export default function Navbar() {
+  const [input, setInput] = useState("");
   const dispatch = useDispatch();
 
   const toggleHandler = () => {
     dispatch(toggleSidebar());
   };
+
+  const searchVideo = () => {
+    dispatch(setCategory(input));
+  };
+
+  const showSuggestion=async()=>{
+    try {
+      const res=await axios.get(SUGGESTION_API+API_KEY)
+    } catch (error) {
+      
+    }
+  }
+
   return (
     <div className="flex items-center justify-center fixed w-[100%] top-0 z-10 bg-white">
       <div className="flex w-[98%] justify-between px-5 py-2">
@@ -27,12 +42,17 @@ export default function Navbar() {
         <div className="flex items-center w-[40%]">
           <div className="w-[100%] py-2 px-1 border rounded-l-full border-gray-400">
             <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
               type="text"
               className=" w-full outline-none"
               placeholder="Search"
             />
           </div>
-          <button className="py-2 px-4 border border-gray-400 rounded-r-full">
+          <button
+            onClick={searchVideo}
+            className="py-2 px-4 border border-gray-400 rounded-r-full"
+          >
             <IoSearchOutline size={"24px"} className="cursor-pointer" />
           </button>
         </div>

@@ -73,7 +73,7 @@ export default function Watch() {
           <div className="flex items-center justify-between ">
             <div className="flex items-center justify-between w-[35%]">
               <div className="flex">
-                {/* <Avatar src={} size={35} round={true} /> */}
+                <Avatar src="https://www.svgrepo.com/show/106359/avatar.svg" size={35} round={true} />
                 <h1 className="font-medium ml-2">
                   {videoDetails?.snippet?.channelTitle}
                 </h1>
@@ -103,12 +103,12 @@ export default function Watch() {
             <h1>Top Chat</h1>
             <BsThreeDotsVertical />
           </div>
-          <div className="overflow-y-auto h-[28rem]">
+          <div className="overflow-y-auto h-[28rem] flex flex-col-reverse thin-scrollbar">
             <LiveChat />
           </div>
-          <div className="flex items-center justify-between border-t p-2">
+          <div className="flex items-center justify-between border-t w-[94%]">
             <div className="flex m-2 items-center w-[90%]">
-              <div>{/* <Avatar src={} size={35} round={true} /> */}</div>
+              <div><Avatar src="https://www.svgrepo.com/show/106359/avatar.svg" size={35} round={true} /></div>
               <input
                 className="border-b outline-none border-gray-300 ml-2"
                 value={input}

@@ -7,6 +7,7 @@ const chatSlice = createSlice({
   },
   reducers: {
     setMessage:(state,action)=>{
+      state.message.splice(10,1);
         state.message.push(action.payload);
     }
   },
