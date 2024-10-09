@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { API_KEY } from "../constants/constant";
 import Avatar from "react-avatar";
-import { BiLike } from "react-icons/bi";
-import { BiDislike } from "react-icons/bi";
+import { BiLike, BiDislike } from "react-icons/bi";
 import { PiShareFat } from "react-icons/pi";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { VscSend } from "react-icons/vsc";
+import LiveChat from "../components/LiveChat";
+import { setMessage } from "../utils/chatSlice";
 
 export default function Watch() {
   const open = useSelector((store) => store.app.open);
 
   const [videoDetails, setVideoDetails] = useState(null);
+  const [input, setInput] = useState("");
 
   const [searchParams] = useSearchParams();
   const searchId = searchParams.get("v");
+
+  const dispatch = useDispatch();
 
   const getDetails = async () => {
     try {
@@ -27,6 +32,16 @@ export default function Watch() {
     } catch (error) {
       console.log("error:", error);
     }
+  };
+
+  const sendMessage = () => {
+    dispatch(
+      setMessage({
+        name: "Priya",
+        message: input,
+      })
+    );
+    setInput("");
   };
 
   useEffect(() => {
@@ -83,10 +98,28 @@ export default function Watch() {
             </div>
           </div>
         </div>
-        <div className="border border-gray-300 ml-2 w-full">
+        <div className="border border-gray-300 ml-3 w-full rounded-lg h-fit p-4 ">
           <div className="flex justify-between items-center w-full">
             <h1>Top Chat</h1>
-            <BsThreeDotsVertical />;
+            <BsThreeDotsVertical />
+          </div>
+          <div className="overflow-y-auto h-[28rem]">
+            <LiveChat />
+          </div>
+          <div className="flex items-center justify-between border-t p-2">
+            <div className="flex m-2 items-center w-[90%]">
+              <div>{/* <Avatar src={} size={35} round={true} /> */}</div>
+              <input
+                className="border-b outline-none border-gray-300 ml-2"
+                value={input}
+                type="text"
+                placeholder="send message..."
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <div className="bg-gray-200 cursor-pointer p-2 rounded-full">
+                <VscSend size={"24px"} onClick={sendMessage} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
