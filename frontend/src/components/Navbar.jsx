@@ -1,32 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoVideocamOutline, IoSearchOutline } from "react-icons/io5";
 import Avatar from "react-avatar";
-import { useDispatch } from "react-redux";
-import { setCategory, toggleSidebar } from "../utils/appSlice";
-import { API_KEY, SUGGESTION_API } from "../constants/constant";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setCategory,
+  setSearchSuggestion,
+  toggleSidebar,
+} from "../utils/appSlice";
+import { SUGGESTION_API } from "../constants/constant";
 import axios from "axios";
 
 export default function Navbar() {
   const [input, setInput] = useState("");
+  const [showSearchSuggestion, setShowSearchSuggestion] = useState(false);
+
   const dispatch = useDispatch();
+  const { searchSuggestion } = useSelector((store) => store.app);
 
   const toggleHandler = () => {
     dispatch(toggleSidebar());
   };
 
-  const searchVideo = () => {
-    dispatch(setCategory(input));
+  const searchVideo = (text) => {
+    dispatch(setCategory(text));
   };
 
-  const showSuggestion=async()=>{
+  const showSuggestion = async () => {
     try {
-      const res=await axios.get(SUGGESTION_API+API_KEY)
+      const response = await axios.get(SUGGESTION_API + input);
+      console.log(response.data);
+      dispatch(setSearchSuggestion(response?.data[1]));
     } catch (error) {
-      
+      console.log("error:", error);
     }
-  }
+  };
+
+  const openSuggestion = () => {
+    setShowSearchSuggestion(true);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      showSuggestion();
+    }, [200]);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [input]);
 
   return (
     <div className="flex items-center justify-center fixed w-[100%] top-0 z-10 bg-white">
@@ -40,22 +62,48 @@ export default function Navbar() {
           <img className="px-5" src="/logo.png" alt="logo" width={"140px"} />
         </div>
         <div className="flex items-center w-[40%]">
-          <div className="w-[100%] py-2 px-1 border rounded-l-full border-gray-400">
+          <div className="flex w-[100%] ">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               type="text"
-              className=" w-full outline-none"
+              className=" w-full outline-none py-2 px-1 border rounded-l-full border-gray-400"
               placeholder="Search"
+              onFocus={openSuggestion}
             />
+            <button
+              onClick={() => searchVideo(input)}
+              className="py-2 px-4 border border-gray-400 rounded-r-full"
+            >
+              <IoSearchOutline size={"24px"} className="cursor-pointer" />
+            </button>
           </div>
-          <button
-            onClick={searchVideo}
-            className="py-2 px-4 border border-gray-400 rounded-r-full"
-          >
-            <IoSearchOutline size={"24px"} className="cursor-pointer" />
-          </button>
+          {showSearchSuggestion && searchSuggestion.length !== 0 && (
+            <div className="absolute z-50 bg-white shadow-xl mt-12 top-3 w-[34%] pb-5 rounded-lg border border-gray-200">
+              <ul>
+                {searchSuggestion.map((item, index) => (
+                  <div className="px-4 hover:bg-gray-100 flex items-center">
+                    <IoSearchOutline
+                      size={"24px"}
+                      className="cursor-pointer text-gray-600"
+                    />
+                    <li
+                      onClick={() => {
+                        searchVideo(item);
+                        setShowSearchSuggestion(false);
+                      }}
+                      className="px-2 py-1 cursor-pointer text-md font-medium"
+                      key={index}
+                    >
+                      {item}
+                    </li>
+                  </div>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
+
         <div className="flex  w-[10%] justify-between items-center">
           <IoVideocamOutline size={"24px"} className="cursor-pointer" />
           <IoIosNotificationsOutline size={"24px"} className="cursor-pointer" />
