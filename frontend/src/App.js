@@ -1,14 +1,31 @@
 import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home";
+import Watch from "./pages/Watch";
 import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
 import Feed from "./components/Feed";
 
 const App = () => {
+  const appRouter = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home />,
+      children: [
+        {
+          path: "/",
+          element: <Feed />,
+        },
+        {
+          path: "/watch",
+          element: <Watch />,
+        },
+      ],
+    },
+  ]);
   return (
     <div>
       <Navbar />
-      <Sidebar />
-      <Feed />
+      <RouterProvider router={appRouter} />
     </div>
   );
 };

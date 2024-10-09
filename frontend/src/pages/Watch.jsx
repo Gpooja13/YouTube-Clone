@@ -1,0 +1,95 @@
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
+import { API_KEY } from "../constants/constant";
+import Avatar from "react-avatar";
+import { BiLike } from "react-icons/bi";
+import { BiDislike } from "react-icons/bi";
+import { PiShareFat } from "react-icons/pi";
+import { MdOutlineFileDownload } from "react-icons/md";
+import { BsThreeDotsVertical } from "react-icons/bs";
+
+export default function Watch() {
+  const open = useSelector((store) => store.app.open);
+
+  const [videoDetails, setVideoDetails] = useState(null);
+
+  const [searchParams] = useSearchParams();
+  const searchId = searchParams.get("v");
+
+  const getDetails = async () => {
+    try {
+      const response = await axios.get(
+        `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${searchId}&key=${API_KEY}`
+      );
+      setVideoDetails(response?.data?.items[0]);
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
+
+  useEffect(() => {
+    getDetails();
+  }, []);
+
+  return (
+    <div
+      className={`relative float-right top-16 ${
+        open ? "w-[82%]" : "w-[92%]"
+      } border border-gray-300 mr-4`}
+    >
+      <div className="flex">
+        <div className="w-[800px]">
+          <iframe
+            width="800"
+            height="500"
+            src={`https://www.youtube.com/embed/${searchId}?&autoplay=1`}
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
+
+          <h1 className="font-bold mt-2 text-lg">
+            {videoDetails?.snippet.title}
+          </h1>
+
+          <div className="flex items-center justify-between ">
+            <div className="flex items-center justify-between w-[35%]">
+              <div className="flex">
+                {/* <Avatar src={} size={35} round={true} /> */}
+                <h1 className="font-medium ml-2">
+                  {videoDetails?.snippet?.channelTitle}
+                </h1>
+              </div>
+              <button className="px-4 py-1 font-medium bg-black text-white rounded-full">
+                Subscribe
+              </button>
+            </div>
+            <div className="flex items-center w-[42%] justify-between mt-2">
+              <div className="flex items-center cursor-pointer bg-gray-300 px-4 py-2 rounded-full">
+                <BiLike size="20px" className="mr-5" />
+                <BiDislike size="20px" />
+              </div>
+              <div className="flex items-center cursor-pointer bg-gray-300 px-4 py-2 rounded-full">
+                <PiShareFat size="20px" className="mr-2" />
+                <span>Share</span>
+              </div>
+              <div className="flex items-center cursor-pointer bg-gray-300 px-4 py-2 rounded-full">
+                <MdOutlineFileDownload size="20px" className="mr-2" />
+                <span>Download</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="border border-gray-300 ml-2 w-full">
+          <div className="flex justify-between items-center w-full">
+            <h1>Top Chat</h1>
+            <BsThreeDotsVertical />;
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

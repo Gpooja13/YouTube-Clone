@@ -18,7 +18,7 @@ const Sidebar = () => {
   const open = useSelector((store) => store.app.open);
 
   return (
-    <div className={`border border-gray-200 ml-3 mt-4 h-[calc(100vh-4.625rem)] absolute top-14 overflow-x-hidden overflow-y-auto ${open?"w-[15%]":"w-[5%]"}`}>
+    <div className={`border border-gray-200 ml-3 mt-4 h-[calc(100vh-4.625rem)] absolute top-12 overflow-x-hidden overflow-y-auto ${open?"w-[15%]":"w-[5%]"}`}>
       {sidebarContent.map((item, index) => {
         return (
           <div key={index} className="m-5 flex">
